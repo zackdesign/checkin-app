@@ -16,7 +16,9 @@ export default function StationHome() {
           </p>
         </div>
 
-        <InstallPrompt />
+        <div className="mb-8">
+          <InstallPrompt />
+        </div>
         <EventSelector />
       </div>
     </div>
