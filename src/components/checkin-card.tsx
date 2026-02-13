@@ -124,15 +124,15 @@ export function CheckInCard({
       </div>
 
       <div className="flex-1 min-w-0">
-        <div className="flex items-baseline gap-2">
+        <div className="flex items-center gap-2">
           <p className="font-medium text-foreground truncate">
             {profileName || "Unassigned"}
           </p>
           {canAssign && (
-            <span className="shrink-0 rounded-full bg-accent/20 px-2 py-0.5 text-[10px] font-medium text-accent">assign</span>
+            <span className="shrink-0 rounded-full bg-accent/20 px-2 py-0.5 text-[10px] font-medium text-accent leading-none">assign</span>
           )}
         </div>
-        <p className="text-xs text-muted truncate">
+        <p className="mt-0.5 text-xs text-muted truncate">
           {label} &middot; {deviceLabel} &middot;{" "}
           {timeAgo(checkin.checked_in_at)}
         </p>
