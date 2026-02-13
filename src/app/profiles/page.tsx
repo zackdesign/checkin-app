@@ -49,16 +49,16 @@ export default function ProfilesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-50 p-6">
-      <div className="mx-auto max-w-lg">
+    <div className="min-h-screen bg-background p-6">
+      <div className="mx-auto max-w-lg animate-fade-in-up">
         <div className="mb-6">
           <Link
             href="/station"
-            className="text-sm text-zinc-500 hover:text-zinc-700"
+            className="text-sm text-muted hover:text-foreground transition-colors"
           >
             &larr; Station
           </Link>
-          <h1 className="text-2xl font-bold text-zinc-900">Profiles</h1>
+          <h1 className="text-2xl font-bold text-foreground">Profiles</h1>
         </div>
 
         {/* Search */}
@@ -67,32 +67,32 @@ export default function ProfilesPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search profiles..."
-          className="mb-4 w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900"
+          className="mb-4 w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent"
         />
 
         {/* Profile list */}
         <div className="mb-8 flex flex-col gap-2">
           {filtered.length === 0 ? (
-            <p className="py-6 text-center text-zinc-400">
+            <p className="py-6 text-center text-muted">
               {search ? "No matching profiles" : "No profiles yet"}
             </p>
           ) : (
             filtered.map((profile) => (
               <div
                 key={profile.id}
-                className="flex items-center justify-between rounded-xl border border-zinc-200 bg-white px-4 py-3 shadow-sm"
+                className="glass-card flex items-center justify-between px-4 py-3"
               >
                 <div>
-                  <p className="font-medium text-zinc-900">
+                  <p className="font-medium text-foreground">
                     {profile.name}
                   </p>
                   {profile.email && (
-                    <p className="text-xs text-zinc-500">{profile.email}</p>
+                    <p className="text-xs text-muted">{profile.email}</p>
                   )}
                 </div>
                 <button
                   onClick={() => deleteProfile(profile.id)}
-                  className="rounded-lg p-1.5 text-zinc-400 hover:bg-red-50 hover:text-red-500 transition-colors"
+                  className="rounded-lg p-1.5 text-muted hover:bg-red-500/10 hover:text-red-400 transition-colors"
                 >
                   ✕
                 </button>
@@ -102,8 +102,8 @@ export default function ProfilesPage() {
         </div>
 
         {/* Create profile */}
-        <div className="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm">
-          <h2 className="mb-3 font-semibold text-zinc-900">
+        <div className="glass-card p-4">
+          <h2 className="mb-3 font-semibold text-foreground">
             Add Profile
           </h2>
           <div className="flex flex-col gap-2">
@@ -112,19 +112,19 @@ export default function ProfilesPage() {
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
               placeholder="Name *"
-              className="rounded-lg border border-zinc-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900"
+              className="rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent"
             />
             <input
               type="email"
               value={newEmail}
               onChange={(e) => setNewEmail(e.target.value)}
               placeholder="Email (optional)"
-              className="rounded-lg border border-zinc-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900"
+              className="rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent"
             />
             <button
               onClick={createProfile}
               disabled={creating || !newName.trim()}
-              className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 disabled:opacity-50 transition-colors"
+              className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-hover disabled:opacity-50 transition-colors"
               onKeyDown={(e) => e.key === "Enter" && createProfile()}
             >
               Add Profile

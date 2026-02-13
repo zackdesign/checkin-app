@@ -8,11 +8,13 @@ export function QrCodeDisplay({ eventId }: { eventId: string }) {
   const url = `${origin}/checkin/${eventId}`;
 
   return (
-    <div className="flex flex-col items-center gap-4">
-      <div className="rounded-2xl bg-white p-6 shadow-lg">
-        <QRCodeSVG value={url} size={256} level="M" />
+    <div className="flex flex-col items-center gap-4 animate-scale-in">
+      <div className="gradient-border">
+        <div className="rounded-2xl bg-white p-6">
+          <QRCodeSVG value={url} size={256} level="M" />
+        </div>
       </div>
-      <p className="text-sm text-zinc-500 max-w-xs text-center break-all">
+      <p className="text-sm text-muted max-w-xs text-center break-all">
         {url}
       </p>
     </div>

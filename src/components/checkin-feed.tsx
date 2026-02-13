@@ -57,25 +57,26 @@ export function CheckInFeed({
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-zinc-900">
+        <h2 className="text-lg font-semibold text-foreground">
           Check-ins
         </h2>
-        <span className="rounded-full bg-zinc-100 px-3 py-1 text-sm font-medium text-zinc-600">
+        <span className="rounded-full bg-accent/20 px-3 py-1 text-sm font-medium text-accent">
           {count}
         </span>
       </div>
 
       {checkins.length === 0 ? (
-        <p className="py-8 text-center text-zinc-400">
+        <p className="py-8 text-center text-muted">
           No check-ins yet. Scan the QR code or tap an NFC tag.
         </p>
       ) : (
         <div className="flex flex-col gap-2">
-          {checkins.map((checkin) => (
+          {checkins.map((checkin, i) => (
             <CheckInCard
               key={checkin.id}
               checkin={checkin}
               onAssign={onAssign}
+              index={i}
             />
           ))}
         </div>

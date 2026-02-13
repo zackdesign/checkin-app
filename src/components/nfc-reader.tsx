@@ -97,14 +97,14 @@ export function NfcReader({ eventId }: { eventId: string }) {
       {status === "idle" ? (
         <button
           onClick={startScanning}
-          className="rounded-xl bg-blue-600 px-6 py-3 font-medium text-white shadow-md hover:bg-blue-700 active:scale-95 transition-all"
+          className="rounded-xl bg-nfc-blue px-6 py-3 font-medium text-white shadow-md shadow-nfc-blue/25 hover:shadow-nfc-blue/40 hover:brightness-110 active:scale-95 transition-all"
         >
           Start NFC Scanning
         </button>
       ) : (
         <button
           onClick={stopScanning}
-          className="rounded-xl bg-zinc-200 px-6 py-3 font-medium text-zinc-700 shadow-md hover:bg-zinc-300 active:scale-95 transition-all"
+          className="rounded-xl bg-surface-light px-6 py-3 font-medium text-foreground shadow-md hover:bg-border active:scale-95 transition-all"
         >
           Stop Scanning
         </button>

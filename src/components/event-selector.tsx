@@ -42,11 +42,11 @@ export function EventSelector() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h2 className="mb-3 text-lg font-semibold text-zinc-900">
+        <h2 className="mb-3 text-lg font-semibold text-foreground">
           Active Events
         </h2>
         {events.length === 0 ? (
-          <p className="py-6 text-center text-zinc-400">
+          <p className="py-6 text-center text-muted">
             No active events. Create one below.
           </p>
         ) : (
@@ -55,10 +55,10 @@ export function EventSelector() {
               <button
                 key={event.id}
                 onClick={() => router.push(`/station/${event.id}`)}
-                className="w-full text-left rounded-xl border border-zinc-200 bg-white px-4 py-3 shadow-sm hover:border-zinc-300 hover:shadow transition-all"
+                className="glass-card w-full text-left px-4 py-3 hover:border-accent/30 hover:shadow-lg hover:shadow-accent/5 transition-all"
               >
-                <p className="font-medium text-zinc-900">{event.name}</p>
-                <p className="text-xs text-zinc-500">
+                <p className="font-medium text-foreground">{event.name}</p>
+                <p className="text-xs text-muted">
                   {new Date(event.created_at).toLocaleDateString()}
                   {event.description && ` — ${event.description}`}
                 </p>
@@ -68,8 +68,8 @@ export function EventSelector() {
         )}
       </div>
 
-      <div className="border-t border-zinc-200 pt-6">
-        <h2 className="mb-3 text-lg font-semibold text-zinc-900">
+      <div className="border-t border-border pt-6">
+        <h2 className="mb-3 text-lg font-semibold text-foreground">
           Create New Event
         </h2>
         <div className="flex gap-2">
@@ -78,13 +78,13 @@ export function EventSelector() {
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
             placeholder="Event name"
-            className="flex-1 rounded-xl border border-zinc-200 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900"
+            className="flex-1 rounded-xl border border-border bg-surface px-4 py-3 text-sm text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent"
             onKeyDown={(e) => e.key === "Enter" && createEvent()}
           />
           <button
             onClick={createEvent}
             disabled={creating || !newName.trim()}
-            className="rounded-xl bg-zinc-900 px-6 py-3 font-medium text-white hover:bg-zinc-800 disabled:opacity-50 transition-colors"
+            className="rounded-xl bg-accent px-6 py-3 font-medium text-white hover:bg-accent-hover disabled:opacity-50 transition-colors"
           >
             Create
           </button>

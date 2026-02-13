@@ -8,6 +8,46 @@ import { Event } from "@/lib/types";
 
 type CheckInState = "idle" | "loading" | "success" | "error";
 
+function SuccessCheckmark() {
+  return (
+    <div className="relative animate-scale-in">
+      <div className="flex h-24 w-24 items-center justify-center rounded-full bg-success/20 animate-success-glow">
+        <svg
+          className="h-14 w-14"
+          viewBox="0 0 52 52"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle
+            cx="26"
+            cy="26"
+            r="25"
+            stroke="#22c55e"
+            strokeWidth="2"
+            fill="none"
+            className="animate-checkmark-circle"
+          />
+          <path
+            d="M14 27l8 8 16-16"
+            stroke="#22c55e"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            fill="none"
+            className="animate-checkmark-draw"
+          />
+        </svg>
+      </div>
+      {/* Floating particles */}
+      <div className="absolute -top-2 left-1/2 h-2 w-2 rounded-full bg-success animate-float-up" style={{ animationDelay: "0.2s" }} />
+      <div className="absolute top-0 -left-3 h-1.5 w-1.5 rounded-full bg-accent animate-float-up" style={{ animationDelay: "0.4s" }} />
+      <div className="absolute top-0 -right-3 h-1.5 w-1.5 rounded-full bg-nfc-blue animate-float-up" style={{ animationDelay: "0.6s" }} />
+      <div className="absolute -top-1 left-1/4 h-1 w-1 rounded-full bg-success animate-float-up" style={{ animationDelay: "0.3s" }} />
+      <div className="absolute -top-1 right-1/4 h-1 w-1 rounded-full bg-accent animate-float-up" style={{ animationDelay: "0.5s" }} />
+    </div>
+  );
+}
+
 export default function CheckInPage() {
   const { eventId } = useParams<{ eventId: string }>();
   const [event, setEvent] = useState<Event | null>(null);
@@ -78,33 +118,31 @@ export default function CheckInPage() {
 
   if (!event) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-zinc-50">
-        <p className="text-zinc-400">Loading...</p>
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <p className="text-muted">Loading...</p>
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-zinc-50 p-6">
-      <div className="w-full max-w-sm text-center">
-        <h1 className="mb-2 text-2xl font-bold text-zinc-900">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background p-6">
+      <div className="w-full max-w-sm text-center animate-fade-in-up">
+        <h1 className="mb-2 text-2xl font-bold text-foreground">
           {event.name}
         </h1>
         {event.description && (
-          <p className="mb-8 text-zinc-500">{event.description}</p>
+          <p className="mb-8 text-muted">{event.description}</p>
         )}
 
         {state === "success" ? (
           <div className="flex flex-col items-center gap-4">
-            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-green-100 text-4xl">
-              ✓
-            </div>
-            <p className="text-lg font-semibold text-green-700">
+            <SuccessCheckmark />
+            <p className="text-lg font-semibold text-success mt-2">
               Checked in!
             </p>
             <button
               onClick={() => setState("idle")}
-              className="mt-4 text-sm text-zinc-500 underline"
+              className="mt-4 text-sm text-muted underline hover:text-foreground transition-colors"
             >
               Check in again
             </button>
@@ -114,13 +152,13 @@ export default function CheckInPage() {
             <button
               onClick={handleCheckIn}
               disabled={state === "loading"}
-              className="w-full rounded-2xl bg-zinc-900 px-8 py-5 text-lg font-semibold text-white shadow-lg hover:bg-zinc-800 active:scale-[0.98] disabled:opacity-50 transition-all"
+              className="w-full rounded-2xl bg-gradient-to-r from-indigo-500 to-blue-500 px-8 py-5 text-lg font-semibold text-white shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:brightness-110 active:scale-[0.98] disabled:opacity-50 transition-all"
             >
               {state === "loading" ? "Checking in..." : "Check In"}
             </button>
 
             {state === "error" && error && (
-              <p className="text-sm text-red-600">{error}</p>
+              <p className="text-sm text-red-400">{error}</p>
             )}
           </div>
         )}

@@ -72,15 +72,15 @@ export function ProfileSelector({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50">
-      <div className="w-full max-w-md rounded-t-2xl sm:rounded-2xl bg-white p-6 shadow-2xl max-h-[80vh] flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm">
+      <div className="glass-card w-full max-w-md rounded-t-2xl sm:rounded-2xl p-6 shadow-2xl max-h-[80vh] flex flex-col animate-scale-in">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-zinc-900">
+          <h3 className="text-lg font-semibold text-foreground">
             Assign Profile
           </h3>
           <button
             onClick={onClose}
-            className="rounded-lg p-1 hover:bg-zinc-100 text-zinc-500"
+            className="rounded-lg p-1 hover:bg-surface-light text-muted transition-colors"
           >
             ✕
           </button>
@@ -91,13 +91,13 @@ export function ProfileSelector({
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search profiles..."
-          className="mb-3 w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="mb-3 w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent"
           autoFocus
         />
 
         <div className="flex-1 overflow-y-auto min-h-0 mb-4">
           {filtered.length === 0 && search && (
-            <p className="py-4 text-center text-sm text-zinc-400">
+            <p className="py-4 text-center text-sm text-muted">
               No profiles found
             </p>
           )}
@@ -106,18 +106,18 @@ export function ProfileSelector({
               key={profile.id}
               onClick={() => assignProfile(profile.id)}
               disabled={loading}
-              className="w-full text-left rounded-lg px-3 py-2 hover:bg-zinc-100 transition-colors disabled:opacity-50"
+              className="w-full text-left rounded-lg px-3 py-2 hover:bg-surface-light transition-colors disabled:opacity-50"
             >
-              <p className="font-medium text-zinc-900">{profile.name}</p>
+              <p className="font-medium text-foreground">{profile.name}</p>
               {profile.email && (
-                <p className="text-xs text-zinc-500">{profile.email}</p>
+                <p className="text-xs text-muted">{profile.email}</p>
               )}
             </button>
           ))}
         </div>
 
-        <div className="border-t border-zinc-200 pt-4">
-          <p className="mb-2 text-sm font-medium text-zinc-600">
+        <div className="border-t border-border pt-4">
+          <p className="mb-2 text-sm font-medium text-muted">
             Or create new:
           </p>
           <div className="flex gap-2">
@@ -126,13 +126,13 @@ export function ProfileSelector({
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
               placeholder="Name"
-              className="flex-1 rounded-lg border border-zinc-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-1 rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent"
               onKeyDown={(e) => e.key === "Enter" && createAndAssign()}
             />
             <button
               onClick={createAndAssign}
               disabled={loading || !newName.trim()}
-              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50 transition-colors"
+              className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-hover disabled:opacity-50 transition-colors"
             >
               Add
             </button>
