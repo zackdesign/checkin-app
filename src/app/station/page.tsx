@@ -1,6 +1,7 @@
 "use client";
 
 import { EventSelector } from "@/components/event-selector";
+import { InstallPrompt } from "@/components/install-prompt";
 
 export default function StationHome() {
   return (
@@ -15,6 +16,7 @@ export default function StationHome() {
           </p>
         </div>
 
+        <InstallPrompt />
         <EventSelector />
       </div>
     </div>
