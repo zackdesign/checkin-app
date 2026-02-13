@@ -7,6 +7,11 @@ export function normalizeTimestamp(dateStr: string): string {
   // Replace space separator with T for ISO 8601 compliance
   let normalized = dateStr.replace(" ", "T");
 
+  // Truncate fractional seconds to 3 digits (milliseconds).
+  // Supabase returns microseconds (.136236) which Android Chrome
+  // cannot parse, producing NaN.
+  normalized = normalized.replace(/(\.\d{3})\d+/, "$1");
+
   // Fix short timezone offset: "+00" → "+00:00", "-05" → "-05:00"
   // Supabase returns "+00" which is not valid ISO 8601
   const shortTz = normalized.match(/([+-])(\d{2})$/);

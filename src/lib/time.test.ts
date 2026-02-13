@@ -2,9 +2,18 @@ import { describe, it, expect } from "vitest";
 import { normalizeTimestamp, timeAgo } from "./time";
 
 describe("normalizeTimestamp", () => {
-  it("handles exact Supabase timestamptz format: space separator, +00 offset", () => {
+  it("handles exact Supabase timestamptz format: space separator, microseconds, +00 offset", () => {
     const result = normalizeTimestamp("2026-02-13 05:52:06.136236+00");
-    expect(result).toBe("2026-02-13T05:52:06.136236+00:00");
+    expect(result).toBe("2026-02-13T05:52:06.136+00:00");
+  });
+
+  it("truncates microseconds to milliseconds", () => {
+    expect(normalizeTimestamp("2026-02-13T05:52:06.123456Z")).toBe("2026-02-13T05:52:06.123Z");
+    expect(normalizeTimestamp("2026-02-13T05:52:06.123456789+00:00")).toBe("2026-02-13T05:52:06.123+00:00");
+  });
+
+  it("keeps 3-digit fractional seconds as-is", () => {
+    expect(normalizeTimestamp("2026-02-13T05:52:06.123Z")).toBe("2026-02-13T05:52:06.123Z");
   });
 
   it("handles Supabase format with +00:00 offset", () => {
@@ -32,9 +41,9 @@ describe("normalizeTimestamp", () => {
     expect(result).toBe("2026-02-13T05:52:06-05:00");
   });
 
-  it("handles Supabase microseconds with short offset", () => {
+  it("handles Supabase microseconds with short offset — produces valid Date", () => {
     const result = normalizeTimestamp("2026-02-13 05:52:06.136236+00");
-    // Should parse to a valid date
+    expect(result).toBe("2026-02-13T05:52:06.136+00:00");
     const date = new Date(result);
     expect(date.getTime()).not.toBeNaN();
   });
@@ -79,7 +88,7 @@ describe("timeAgo", () => {
     const variants = [
       "2026-02-13 05:50:00+00",
       "2026-02-13 05:50:00+00:00",
-      "2026-02-13 05:50:00.000000+00",
+      "2026-02-13 05:50:00.000+00",
       "2026-02-13T05:50:00Z",
       "2026-02-13T05:50:00+00:00",
     ];
