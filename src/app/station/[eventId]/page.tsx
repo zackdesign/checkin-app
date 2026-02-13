@@ -62,7 +62,7 @@ export default function StationEventPage() {
       </header>
 
       {/* Main content */}
-      <main className="mx-auto max-w-6xl p-6 animate-fade-in-up">
+      <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 animate-fade-in-up">
         <div className="grid gap-8 lg:grid-cols-[1fr_1fr]">
           {/* Left: QR Code + NFC */}
           <div className="flex flex-col items-center gap-8">

@@ -113,33 +113,47 @@ export function CheckInCard({
     checkin.device?.label || checkin.device?.device_identifier || "Unknown";
   const { icon, label, colorClass } = getDeviceInfo(checkin);
   const staggerClass = index <= 4 ? `stagger-${index + 1}` : "";
+  const canAssign = !profileName && onAssign;
 
-  return (
-    <div className={`glass-card flex items-center gap-3 px-4 py-3 animate-slide-in-right ${staggerClass}`}>
+  const content = (
+    <>
       <div
-        className={`flex h-10 w-10 items-center justify-center rounded-full ${colorClass}`}
+        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${colorClass}`}
       >
         {icon}
       </div>
 
       <div className="flex-1 min-w-0">
-        <p className="font-medium text-foreground truncate">
-          {profileName || "Unassigned"}
-        </p>
+        <div className="flex items-baseline gap-2">
+          <p className="font-medium text-foreground truncate">
+            {profileName || "Unassigned"}
+          </p>
+          {canAssign && (
+            <span className="shrink-0 text-xs text-accent">tap to assign</span>
+          )}
+        </div>
         <p className="text-xs text-muted truncate">
           {label} &middot; {deviceLabel} &middot;{" "}
           {timeAgo(checkin.checked_in_at)}
         </p>
       </div>
+    </>
+  );
 
-      {!profileName && onAssign && (
-        <button
-          onClick={() => onAssign(checkin)}
-          className="shrink-0 rounded-lg bg-surface-light px-3 py-1.5 text-sm font-medium text-foreground hover:bg-border transition-colors"
-        >
-          Assign
-        </button>
-      )}
+  if (canAssign) {
+    return (
+      <button
+        onClick={() => onAssign(checkin)}
+        className={`glass-card flex items-center gap-3 px-3 py-2.5 text-left w-full animate-slide-in-right hover:border-accent/30 active:bg-surface-light transition-all ${staggerClass}`}
+      >
+        {content}
+      </button>
+    );
+  }
+
+  return (
+    <div className={`glass-card flex items-center gap-3 px-3 py-2.5 animate-slide-in-right ${staggerClass}`}>
+      {content}
     </div>
   );
 }
