@@ -1,7 +1,7 @@
 "use client";
 
 import { CheckInWithDetails } from "@/lib/types";
-import { timeAgo } from "@/lib/time";
+import { timeAgo, timeAgoDebug } from "@/lib/time";
 
 function NfcIcon() {
   return (
@@ -125,6 +125,9 @@ export function CheckInCard({
         <p className="mt-0.5 text-xs text-muted truncate">
           {label} &middot; {deviceLabel} &middot;{" "}
           {timeAgo(checkin.checked_in_at)}
+        </p>
+        <p className="mt-0.5 text-[9px] text-muted/50 break-all">
+          {timeAgoDebug(checkin.checked_in_at)}
         </p>
       </div>
     </>

@@ -39,3 +39,11 @@ export function timeAgo(dateStr: string): string {
   if (isNaN(ms) || ms > Date.now()) return "just now";
   return formatDistanceToNow(new Date(ms), { addSuffix: true });
 }
+
+/** Temporary debug helper – exposes raw vs parsed for diagnosis. */
+export function timeAgoDebug(dateStr: string): string {
+  const ms = parseTimestamp(dateStr);
+  const nowMs = Date.now();
+  const diffMin = Math.round((nowMs - ms) / 60000);
+  return `raw="${dateStr}" parsed=${ms} now=${nowMs} diff=${diffMin}min`;
+}
