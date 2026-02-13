@@ -8,42 +8,108 @@ import { Event } from "@/lib/types";
 
 type CheckInState = "idle" | "loading" | "success" | "error";
 
+const BURST_PARTICLES = [
+  { x: "-40px", y: "-50px", color: "bg-success", size: "h-2.5 w-2.5", delay: "0s" },
+  { x: "45px", y: "-35px", color: "bg-accent", size: "h-2 w-2", delay: "0.05s" },
+  { x: "50px", y: "20px", color: "bg-nfc-blue", size: "h-2.5 w-2.5", delay: "0.1s" },
+  { x: "-45px", y: "30px", color: "bg-yellow-400", size: "h-2 w-2", delay: "0.05s" },
+  { x: "10px", y: "-55px", color: "bg-pink-400", size: "h-1.5 w-1.5", delay: "0.08s" },
+  { x: "-20px", y: "50px", color: "bg-success", size: "h-1.5 w-1.5", delay: "0.12s" },
+  { x: "35px", y: "45px", color: "bg-accent", size: "h-2 w-2", delay: "0s" },
+  { x: "-50px", y: "-10px", color: "bg-cyan-400", size: "h-1.5 w-1.5", delay: "0.06s" },
+  { x: "25px", y: "-50px", color: "bg-yellow-400", size: "h-2 w-2", delay: "0.03s" },
+  { x: "-30px", y: "-40px", color: "bg-pink-400", size: "h-2 w-2", delay: "0.1s" },
+];
+
+const CONFETTI = [
+  { x: "-60px", y: "-80px", drift: "15px", spin: "400deg", color: "bg-success", delay: "0.1s" },
+  { x: "50px", y: "-90px", drift: "-20px", spin: "-300deg", color: "bg-accent", delay: "0.15s" },
+  { x: "-30px", y: "-70px", drift: "-10px", spin: "500deg", color: "bg-yellow-400", delay: "0.2s" },
+  { x: "70px", y: "-60px", drift: "8px", spin: "-400deg", color: "bg-pink-400", delay: "0.12s" },
+  { x: "-80px", y: "-50px", drift: "20px", spin: "350deg", color: "bg-nfc-blue", delay: "0.25s" },
+  { x: "20px", y: "-95px", drift: "-5px", spin: "-450deg", color: "bg-cyan-400", delay: "0.18s" },
+];
+
 function SuccessCheckmark() {
   return (
-    <div className="relative animate-scale-in">
-      <div className="flex h-24 w-24 items-center justify-center rounded-full bg-success/20 animate-success-glow">
-        <svg
-          className="h-14 w-14"
-          viewBox="0 0 52 52"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <circle
-            cx="26"
-            cy="26"
-            r="25"
-            stroke="#22c55e"
-            strokeWidth="2"
+    <div className="relative flex items-center justify-center" style={{ width: 200, height: 200 }}>
+      {/* Expanding ring */}
+      <div
+        className="absolute inset-0 rounded-full border-2 border-success/40 animate-ring-expand"
+        style={{ animationDelay: "0.2s" }}
+      />
+      <div
+        className="absolute inset-0 rounded-full border border-accent/30 animate-ring-expand"
+        style={{ animationDelay: "0.4s" }}
+      />
+
+      {/* Burst particles */}
+      {BURST_PARTICLES.map((p, i) => (
+        <div
+          key={i}
+          className={`absolute rounded-full ${p.color} ${p.size} animate-burst-out`}
+          style={{
+            "--bx": p.x,
+            "--by": p.y,
+            animationDelay: p.delay,
+            top: "50%",
+            left: "50%",
+            marginTop: "-4px",
+            marginLeft: "-4px",
+          } as React.CSSProperties}
+        />
+      ))}
+
+      {/* Confetti pieces */}
+      {CONFETTI.map((c, i) => (
+        <div
+          key={`c${i}`}
+          className={`absolute ${c.color} animate-confetti-fall`}
+          style={{
+            "--cx": c.x,
+            "--cy": c.y,
+            "--drift": c.drift,
+            "--spin": c.spin,
+            animationDelay: c.delay,
+            top: "50%",
+            left: "50%",
+            width: i % 2 === 0 ? "8px" : "6px",
+            height: i % 2 === 0 ? "3px" : "6px",
+            borderRadius: i % 2 === 0 ? "1px" : "50%",
+          } as React.CSSProperties}
+        />
+      ))}
+
+      {/* Main checkmark */}
+      <div className="animate-bounce-in">
+        <div className="flex h-28 w-28 items-center justify-center rounded-full bg-success/20 animate-success-glow">
+          <svg
+            className="h-16 w-16"
+            viewBox="0 0 52 52"
             fill="none"
-            className="animate-checkmark-circle"
-          />
-          <path
-            d="M14 27l8 8 16-16"
-            stroke="#22c55e"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            fill="none"
-            className="animate-checkmark-draw"
-          />
-        </svg>
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle
+              cx="26"
+              cy="26"
+              r="25"
+              stroke="#22c55e"
+              strokeWidth="2"
+              fill="none"
+              className="animate-checkmark-circle"
+            />
+            <path
+              d="M14 27l8 8 16-16"
+              stroke="#22c55e"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              fill="none"
+              className="animate-checkmark-draw"
+            />
+          </svg>
+        </div>
       </div>
-      {/* Floating particles */}
-      <div className="absolute -top-2 left-1/2 h-2 w-2 rounded-full bg-success animate-float-up" style={{ animationDelay: "0.2s" }} />
-      <div className="absolute top-0 -left-3 h-1.5 w-1.5 rounded-full bg-accent animate-float-up" style={{ animationDelay: "0.4s" }} />
-      <div className="absolute top-0 -right-3 h-1.5 w-1.5 rounded-full bg-nfc-blue animate-float-up" style={{ animationDelay: "0.6s" }} />
-      <div className="absolute -top-1 left-1/4 h-1 w-1 rounded-full bg-success animate-float-up" style={{ animationDelay: "0.3s" }} />
-      <div className="absolute -top-1 right-1/4 h-1 w-1 rounded-full bg-accent animate-float-up" style={{ animationDelay: "0.5s" }} />
     </div>
   );
 }
