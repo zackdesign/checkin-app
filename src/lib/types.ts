@@ -18,7 +18,7 @@ export type Profile = {
 export type Device = {
   id: string;
   device_identifier: string;
-  device_type: "nfc" | "web";
+  device_type: "nfc" | "web" | "ios" | "android";
   profile_id: string | null;
   label: string | null;
   created_at: string;

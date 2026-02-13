@@ -72,15 +72,18 @@ export function ProfileSelector({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm">
-      <div className="glass-card w-full max-w-md rounded-t-2xl sm:rounded-2xl p-6 shadow-2xl max-h-[80vh] flex flex-col animate-scale-in">
-        <div className="flex items-center justify-between mb-4">
+    <div
+      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/60 backdrop-blur-sm p-4 pt-[10vh] sm:items-center sm:pt-4"
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
+      <div className="glass-card w-full max-w-md rounded-2xl p-5 shadow-2xl flex flex-col animate-scale-in max-h-[min(80vh,600px)]">
+        <div className="flex items-center justify-between mb-3">
           <h3 className="text-lg font-semibold text-foreground">
             Assign Profile
           </h3>
           <button
             onClick={onClose}
-            className="rounded-lg p-1 hover:bg-surface-light text-muted transition-colors"
+            className="rounded-lg p-2 hover:bg-surface-light text-muted transition-colors"
           >
             ✕
           </button>
@@ -91,11 +94,10 @@ export function ProfileSelector({
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search profiles..."
-          className="mb-3 w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent"
-          autoFocus
+          className="mb-3 w-full rounded-lg border border-border bg-surface px-3 py-2.5 text-base text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent"
         />
 
-        <div className="flex-1 overflow-y-auto min-h-0 mb-4">
+        <div className="flex-1 overflow-y-auto min-h-0 mb-3 -mx-1 px-1">
           {filtered.length === 0 && search && (
             <p className="py-4 text-center text-sm text-muted">
               No profiles found
@@ -106,7 +108,7 @@ export function ProfileSelector({
               key={profile.id}
               onClick={() => assignProfile(profile.id)}
               disabled={loading}
-              className="w-full text-left rounded-lg px-3 py-2 hover:bg-surface-light transition-colors disabled:opacity-50"
+              className="w-full text-left rounded-lg px-3 py-2.5 hover:bg-surface-light active:bg-surface-light transition-colors disabled:opacity-50"
             >
               <p className="font-medium text-foreground">{profile.name}</p>
               {profile.email && (
@@ -116,7 +118,7 @@ export function ProfileSelector({
           ))}
         </div>
 
-        <div className="border-t border-border pt-4">
+        <div className="border-t border-border pt-3">
           <p className="mb-2 text-sm font-medium text-muted">
             Or create new:
           </p>
@@ -126,13 +128,13 @@ export function ProfileSelector({
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
               placeholder="Name"
-              className="flex-1 rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent"
+              className="flex-1 rounded-lg border border-border bg-surface px-3 py-2.5 text-base text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent"
               onKeyDown={(e) => e.key === "Enter" && createAndAssign()}
             />
             <button
               onClick={createAndAssign}
               disabled={loading || !newName.trim()}
-              className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent-hover disabled:opacity-50 transition-colors"
+              className="rounded-lg bg-accent px-4 py-2.5 text-sm font-medium text-white hover:bg-accent-hover active:bg-accent disabled:opacity-50 transition-colors"
             >
               Add
             </button>

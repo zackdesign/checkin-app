@@ -73,13 +73,21 @@ export default function CheckInPage() {
     try {
       const deviceIdentifier = getOrCreateDeviceId();
 
+      // Detect platform
+      const ua = navigator.userAgent;
+      const deviceType = /iPad|iPhone|iPod/.test(ua)
+        ? ("ios" as const)
+        : /Android/.test(ua)
+          ? ("android" as const)
+          : ("web" as const);
+
       // Upsert device
       const { data: device, error: deviceError } = await supabase
         .from("devices")
         .upsert(
           {
             device_identifier: deviceIdentifier,
-            device_type: "web" as const,
+            device_type: deviceType,
           },
           { onConflict: "device_identifier" }
         )
