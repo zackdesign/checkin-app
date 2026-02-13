@@ -100,7 +100,7 @@ export function CheckInCard({
 }) {
   const profileName = checkin.profile?.name;
   const rawId = checkin.device?.label || checkin.device?.device_identifier || "Unknown";
-  const deviceLabel = rawId.length > 12 ? rawId.slice(0, 8) + "…" : rawId;
+  const deviceLabel = rawId.length > 12 ? rawId.slice(0, 6) + "…" + rawId.slice(-4) : rawId;
   const { icon, label, colorClass } = getDeviceInfo(checkin);
   const staggerClass = index <= 4 ? `stagger-${index + 1}` : "";
   const canAssign = !profileName && onAssign;
