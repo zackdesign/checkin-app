@@ -1,13 +1,9 @@
 import parseDate from "postgres-date";
+import { formatDistanceToNow } from "date-fns";
 
-export function timeAgo(dateStr: string, now?: number): string {
+export function timeAgo(dateStr: string): string {
   const date = parseDate(dateStr);
   if (!date || !(date instanceof Date)) return "just now";
-  const seconds = Math.floor(((now ?? Date.now()) - date.getTime()) / 1000);
-  if (seconds < 0) return "just now";
-  if (seconds < 60) return "just now";
-  const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes}m ago`;
-  const hours = Math.floor(minutes / 60);
-  return `${hours}h ago`;
+  if (date.getTime() > Date.now()) return "just now";
+  return formatDistanceToNow(date, { addSuffix: true });
 }
