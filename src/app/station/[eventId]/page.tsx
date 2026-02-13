@@ -37,7 +37,7 @@ export default function StationEventPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       {/* Header */}
       <header className="glass-card rounded-none border-x-0 border-t-0 px-6 py-4 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between">
