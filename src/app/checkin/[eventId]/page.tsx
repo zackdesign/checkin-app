@@ -8,32 +8,21 @@ import { Event } from "@/lib/types";
 
 type CheckInState = "idle" | "loading" | "success" | "error";
 
-const BURST_PARTICLES = [
-  { x: "-40px", y: "-50px", color: "bg-success", size: "h-2.5 w-2.5", delay: "0s" },
-  { x: "45px", y: "-35px", color: "bg-accent", size: "h-2 w-2", delay: "0.05s" },
-  { x: "50px", y: "20px", color: "bg-nfc-blue", size: "h-2.5 w-2.5", delay: "0.1s" },
-  { x: "-45px", y: "30px", color: "bg-yellow-400", size: "h-2 w-2", delay: "0.05s" },
-  { x: "10px", y: "-55px", color: "bg-pink-400", size: "h-1.5 w-1.5", delay: "0.08s" },
-  { x: "-20px", y: "50px", color: "bg-success", size: "h-1.5 w-1.5", delay: "0.12s" },
-  { x: "35px", y: "45px", color: "bg-accent", size: "h-2 w-2", delay: "0s" },
-  { x: "-50px", y: "-10px", color: "bg-cyan-400", size: "h-1.5 w-1.5", delay: "0.06s" },
-  { x: "25px", y: "-50px", color: "bg-yellow-400", size: "h-2 w-2", delay: "0.03s" },
-  { x: "-30px", y: "-40px", color: "bg-pink-400", size: "h-2 w-2", delay: "0.1s" },
-];
-
-const CONFETTI = [
-  { x: "-60px", y: "-80px", drift: "15px", spin: "400deg", color: "bg-success", delay: "0.1s" },
-  { x: "50px", y: "-90px", drift: "-20px", spin: "-300deg", color: "bg-accent", delay: "0.15s" },
-  { x: "-30px", y: "-70px", drift: "-10px", spin: "500deg", color: "bg-yellow-400", delay: "0.2s" },
-  { x: "70px", y: "-60px", drift: "8px", spin: "-400deg", color: "bg-pink-400", delay: "0.12s" },
-  { x: "-80px", y: "-50px", drift: "20px", spin: "350deg", color: "bg-nfc-blue", delay: "0.25s" },
-  { x: "20px", y: "-95px", drift: "-5px", spin: "-450deg", color: "bg-cyan-400", delay: "0.18s" },
+const SPARKLES = [
+  { anim: "animate-sparkle-1", color: "bg-success", size: "h-2.5 w-2.5", delay: "0.1s" },
+  { anim: "animate-sparkle-2", color: "bg-accent", size: "h-2 w-2", delay: "0.15s" },
+  { anim: "animate-sparkle-3", color: "bg-nfc-blue", size: "h-2.5 w-2.5", delay: "0.05s" },
+  { anim: "animate-sparkle-4", color: "bg-yellow-400", size: "h-2 w-2", delay: "0.2s" },
+  { anim: "animate-sparkle-5", color: "bg-pink-400", size: "h-1.5 w-1.5", delay: "0.08s" },
+  { anim: "animate-sparkle-6", color: "bg-success", size: "h-2 w-2", delay: "0.18s" },
+  { anim: "animate-sparkle-7", color: "bg-accent", size: "h-2 w-2", delay: "0.12s" },
+  { anim: "animate-sparkle-8", color: "bg-cyan-400", size: "h-1.5 w-1.5", delay: "0.22s" },
 ];
 
 function SuccessCheckmark() {
   return (
-    <div className="relative flex items-center justify-center" style={{ width: 200, height: 200 }}>
-      {/* Expanding ring */}
+    <div className="relative flex items-center justify-center" style={{ width: 180, height: 180 }}>
+      {/* Expanding rings */}
       <div
         className="absolute inset-0 rounded-full border-2 border-success/40 animate-ring-expand"
         style={{ animationDelay: "0.2s" }}
@@ -43,48 +32,20 @@ function SuccessCheckmark() {
         style={{ animationDelay: "0.4s" }}
       />
 
-      {/* Burst particles */}
-      {BURST_PARTICLES.map((p, i) => (
+      {/* Sparkle particles — each has its own baked keyframe, no CSS vars */}
+      {SPARKLES.map((s, i) => (
         <div
           key={i}
-          className={`absolute rounded-full ${p.color} ${p.size} animate-burst-out`}
-          style={{
-            "--bx": p.x,
-            "--by": p.y,
-            animationDelay: p.delay,
-            top: "50%",
-            left: "50%",
-            marginTop: "-4px",
-            marginLeft: "-4px",
-          } as React.CSSProperties}
-        />
-      ))}
-
-      {/* Confetti pieces */}
-      {CONFETTI.map((c, i) => (
-        <div
-          key={`c${i}`}
-          className={`absolute ${c.color} animate-confetti-fall`}
-          style={{
-            "--cx": c.x,
-            "--cy": c.y,
-            "--drift": c.drift,
-            "--spin": c.spin,
-            animationDelay: c.delay,
-            top: "50%",
-            left: "50%",
-            width: i % 2 === 0 ? "8px" : "6px",
-            height: i % 2 === 0 ? "3px" : "6px",
-            borderRadius: i % 2 === 0 ? "1px" : "50%",
-          } as React.CSSProperties}
+          className={`absolute top-1/2 left-1/2 -mt-1 -ml-1 rounded-full ${s.color} ${s.size} ${s.anim}`}
+          style={{ animationDelay: s.delay }}
         />
       ))}
 
       {/* Main checkmark */}
       <div className="animate-bounce-in">
-        <div className="flex h-28 w-28 items-center justify-center rounded-full bg-success/20 animate-success-glow">
+        <div className="flex h-24 w-24 items-center justify-center rounded-full bg-success/20 animate-success-glow">
           <svg
-            className="h-16 w-16"
+            className="h-14 w-14"
             viewBox="0 0 52 52"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
