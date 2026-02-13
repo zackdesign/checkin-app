@@ -1,58 +1,85 @@
 import { describe, it, expect } from "vitest";
-import { normalizeTimestamp, timeAgo } from "./time";
+import { parseTimestamp, timeAgo } from "./time";
 
-describe("normalizeTimestamp", () => {
-  it("handles exact Supabase timestamptz format: space separator, microseconds, +00 offset", () => {
-    const result = normalizeTimestamp("2026-02-13 05:52:06.136236+00");
-    expect(result).toBe("2026-02-13T05:52:06.136+00:00");
+describe("parseTimestamp", () => {
+  // Reference: 2026-02-13T06:00:00Z = 1770847200000
+  const ref = Date.UTC(2026, 1, 13, 6, 0, 0);
+
+  it("parses exact Supabase format: space, microseconds, +00", () => {
+    const result = parseTimestamp("2026-02-13 05:52:06.136236+00");
+    expect(result).not.toBeNaN();
+    // Should be close to 2026-02-13T05:52:06.136Z
+    const expected = Date.UTC(2026, 1, 13, 5, 52, 6, 136);
+    expect(result).toBe(expected);
   });
 
-  it("truncates microseconds to milliseconds", () => {
-    expect(normalizeTimestamp("2026-02-13T05:52:06.123456Z")).toBe("2026-02-13T05:52:06.123Z");
-    expect(normalizeTimestamp("2026-02-13T05:52:06.123456789+00:00")).toBe("2026-02-13T05:52:06.123+00:00");
+  it("parses space-separated with +00:00", () => {
+    const result = parseTimestamp("2026-02-13 05:52:06+00:00");
+    expect(result).toBe(Date.UTC(2026, 1, 13, 5, 52, 6));
   });
 
-  it("keeps 3-digit fractional seconds as-is", () => {
-    expect(normalizeTimestamp("2026-02-13T05:52:06.123Z")).toBe("2026-02-13T05:52:06.123Z");
+  it("parses ISO with T and Z", () => {
+    const result = parseTimestamp("2026-02-13T05:52:06Z");
+    expect(result).toBe(Date.UTC(2026, 1, 13, 5, 52, 6));
   });
 
-  it("handles Supabase format with +00:00 offset", () => {
-    const result = normalizeTimestamp("2026-02-13 05:52:06+00:00");
-    expect(result).toBe("2026-02-13T05:52:06+00:00");
+  it("parses ISO with T and +00:00", () => {
+    const result = parseTimestamp("2026-02-13T05:52:06+00:00");
+    expect(result).toBe(Date.UTC(2026, 1, 13, 5, 52, 6));
   });
 
-  it("handles timestamp without timezone — appends Z", () => {
-    const result = normalizeTimestamp("2026-02-13 05:52:06");
-    expect(result).toBe("2026-02-13T05:52:06Z");
-  });
-
-  it("handles ISO 8601 with T separator and Z", () => {
-    const result = normalizeTimestamp("2026-02-13T05:52:06Z");
-    expect(result).toBe("2026-02-13T05:52:06Z");
-  });
-
-  it("handles ISO 8601 with T separator and +00:00", () => {
-    const result = normalizeTimestamp("2026-02-13T05:52:06+00:00");
-    expect(result).toBe("2026-02-13T05:52:06+00:00");
+  it("parses timestamp without timezone as UTC", () => {
+    const result = parseTimestamp("2026-02-13 05:52:06");
+    expect(result).toBe(Date.UTC(2026, 1, 13, 5, 52, 6));
   });
 
   it("handles negative timezone offset", () => {
-    const result = normalizeTimestamp("2026-02-13 05:52:06-05:00");
-    expect(result).toBe("2026-02-13T05:52:06-05:00");
+    // 05:52:06-05:00 = 10:52:06 UTC
+    const result = parseTimestamp("2026-02-13 05:52:06-05:00");
+    expect(result).toBe(Date.UTC(2026, 1, 13, 10, 52, 6));
   });
 
-  it("handles Supabase microseconds with short offset — produces valid Date", () => {
-    const result = normalizeTimestamp("2026-02-13 05:52:06.136236+00");
-    expect(result).toBe("2026-02-13T05:52:06.136+00:00");
-    const date = new Date(result);
-    expect(date.getTime()).not.toBeNaN();
+  it("handles positive timezone offset", () => {
+    // 05:52:06+13:00 = previous day 16:52:06 UTC
+    const result = parseTimestamp("2026-02-13 05:52:06+13:00");
+    expect(result).toBe(Date.UTC(2026, 1, 12, 16, 52, 6));
+  });
+
+  it("handles short +00 offset (Supabase default)", () => {
+    const result = parseTimestamp("2026-02-13 05:52:06+00");
+    expect(result).toBe(Date.UTC(2026, 1, 13, 5, 52, 6));
+  });
+
+  it("truncates microseconds to milliseconds", () => {
+    const a = parseTimestamp("2026-02-13 05:52:06.123456+00");
+    const b = parseTimestamp("2026-02-13 05:52:06.123+00");
+    expect(a).toBe(b);
+  });
+
+  it("pads short fractional seconds", () => {
+    const result = parseTimestamp("2026-02-13 05:52:06.1+00");
+    expect(result).toBe(Date.UTC(2026, 1, 13, 5, 52, 6, 100));
+  });
+
+  it("all Supabase variants produce the same epoch", () => {
+    const variants = [
+      "2026-02-13 05:50:00+00",
+      "2026-02-13 05:50:00+00:00",
+      "2026-02-13 05:50:00.000+00",
+      "2026-02-13 05:50:00.000000+00",
+      "2026-02-13T05:50:00Z",
+      "2026-02-13T05:50:00+00:00",
+      "2026-02-13 05:50:00",
+    ];
+    const results = variants.map(parseTimestamp);
+    const unique = new Set(results);
+    expect(unique.size).toBe(1);
+    expect(results[0]).toBe(Date.UTC(2026, 1, 13, 5, 50, 0));
   });
 });
 
 describe("timeAgo", () => {
-  // Use a fixed "now" for deterministic tests
-  // 2026-02-13T06:00:00Z in ms
-  const now = new Date("2026-02-13T06:00:00Z").getTime();
+  const now = Date.UTC(2026, 1, 13, 6, 0, 0);
 
   it("shows 'just now' for timestamps < 60s ago", () => {
     expect(timeAgo("2026-02-13 05:59:30+00", now)).toBe("just now");
@@ -71,30 +98,14 @@ describe("timeAgo", () => {
   });
 
   it("parses exact Supabase format correctly", () => {
-    // 8 minutes before "now"
     expect(timeAgo("2026-02-13 05:52:06.136236+00", now)).toBe("7m ago");
   });
 
-  it("parses space-separated format without timezone as UTC", () => {
-    // Without timezone should be treated as UTC
+  it("works with no timezone (treated as UTC)", () => {
     expect(timeAgo("2026-02-13 05:50:00", now)).toBe("10m ago");
   });
 
-  it("parses ISO format with Z correctly", () => {
+  it("works with ISO Z format", () => {
     expect(timeAgo("2026-02-13T05:50:00Z", now)).toBe("10m ago");
-  });
-
-  it("gives consistent results for all Supabase timestamp variants", () => {
-    const variants = [
-      "2026-02-13 05:50:00+00",
-      "2026-02-13 05:50:00+00:00",
-      "2026-02-13 05:50:00.000+00",
-      "2026-02-13T05:50:00Z",
-      "2026-02-13T05:50:00+00:00",
-    ];
-    const results = variants.map((v) => timeAgo(v, now));
-    // All should produce the same result
-    expect(new Set(results).size).toBe(1);
-    expect(results[0]).toBe("10m ago");
   });
 });
