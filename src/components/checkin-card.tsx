@@ -3,10 +3,13 @@
 import { CheckInWithDetails } from "@/lib/types";
 
 function timeAgo(dateStr: string): string {
-  // Supabase timestamps may lack timezone suffix — normalize to UTC
-  const normalized = dateStr.endsWith("Z") || dateStr.includes("+")
-    ? dateStr
-    : dateStr.replace(" ", "T") + "Z";
+  // Supabase returns "2026-02-13 02:00:00+00:00" — the space breaks
+  // parsing on some mobile browsers. Always use ISO 8601 T separator,
+  // and append Z if no timezone indicator exists.
+  let normalized = dateStr.replace(" ", "T");
+  if (!/[Z+\-]\d{0,2}:?\d{0,2}$/.test(normalized)) {
+    normalized += "Z";
+  }
   const seconds = Math.floor(
     (Date.now() - new Date(normalized).getTime()) / 1000
   );
