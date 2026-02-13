@@ -129,7 +129,7 @@ export function CheckInCard({
             {profileName || "Unassigned"}
           </p>
           {canAssign && (
-            <span className="shrink-0 text-xs text-accent">tap to assign</span>
+            <span className="shrink-0 rounded-full bg-accent/20 px-2 py-0.5 text-[10px] font-medium text-accent">assign</span>
           )}
         </div>
         <p className="text-xs text-muted truncate">
